@@ -12,6 +12,7 @@ https://dacon.io/competitions/official/235743/overview/description
  - [x] 메뉴 별 컬럼 생성
  - [x] 코로나 데이터 다운로드
  - [ ] 코로나 데이터 상관 관계 보기
+ - [ ] 덮밥류 쌀밥 분리해서 메뉴 전처리 하기
  ### EDA
  - [ ] 추가해 주세요!
  - [ ] 메뉴 Top 10 뽑기
