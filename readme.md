@@ -2,6 +2,8 @@
 
 https://dacon.io/competitions/official/235743/overview/description
 
+- 노션페이지 추가 해서 올려주시면 
+
 ## Todo
  ### 전처리
  - [ ] 요일 인코딩
