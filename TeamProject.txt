@@ -1,0 +1,87 @@
+
+Average Blending
+모델은 부스팅 계열인 boost, xgboost, lightgbm 세 가지를 사용합니다.
+
+
+
+Cross Validation 
+교차검증을 통해 모델의 성능을 간단히 평가하겠습니다.
+
+
+
+Baseline 모델에서는 다음과 같이 여러 모델을 입력하면 각 모델에 대한 예측 결과를 평균 내어 주는 AveragingBlending() 함수를 만들어 사용합니다. AveragingBlending() 함수는 models 딕셔너리 안에 있는 모델을 모두 x와 y로 학습시킨 뒤 predictions에 그 예측 결괏값을 모아서 평균한 값을 반환합니다.
+
+
+
+<여기가 MAE로 바뀌어야 되구요!>
+
+대회에서 점수를 매기는 것과 같은 평가 척도인 RMSE를 계산하기 위해 다음과 같은 함수를 만들어놓겠습니다.
+한 가지 주의해야 할 것은, y_test나 y_pred는 위에서 np.log1p()로 변환이 된 값이기 때문에 원래 데이터의 단위에 맞게 되돌리기 위해 np.expm1()을 추가해야 한다는 점입니다.
+
+exp로 다시 변환해서 mean_squared_error를 계산한 값에 np.sqrt를 취하면 RMSE 값을 얻을 수 있겠죠!
+
+
+다음으로 XGBRegressor, LGBMRegressor, GradientBoostingRegressor, RandomForestRegressor 네 가지 모델을 가져오겠습니다.
+
+
+네, 이렇게 간단하게 네 가지의 모델에 대해 모두 RMSE값을 빠르게 얻을 수 있습니다. (MAE)
+
+이제 모델과 데이터셋이 있다면 RMSE 결괏값을 나타내주는 함수가 준비되었으니, 다양한 하이퍼 파라미터로 실험하는 일만 남았죠. 실험은 sklearn.model_selection 라이브러리 안에 있는 GridSearchCV 클래스를 활용합니다.
+
+그리드 탐색은 사람이 먼저 탐색할 하이퍼 파라미터의 값들을 정해두고, 그 값들로 만들어질 수 있는 모든 조합을 탐색합니다. 특정 값에 대한 하이퍼 파라미터 조합을 모두 탐색하고자 할 때 유리하겠네요!
+
+
+먼저 GridSearchCV에 입력되는 인자들은 다음과 같습니다.
+
+param_grid : 탐색할 파라미터의 종류 (딕셔너리로 입력)
+scoring : 모델의 성능을 평가할 지표
+cv : cross validation을 수행하기 위해 train 데이터셋을 나누는 조각의 개수
+verbose : 그리드 탐색을 진행하면서 진행 과정을 출력해서 보여줄 메세지의 양 (숫자가 클수록 더 많은 메세지를 출력합니다.)
+n_jobs : 그리드 탐색을 진행하면서 사용할 CPU의 개수
+
+
+그러면 model, param_grid와 함께 다른 여러 가지 인자를 넣어서 GridSearchCV를 수행할 수 있습니다!
+
+다음과 같이 GridSearchCV를 이용해서 grid_model 모델을 초기화하고, train과 y 데이터로 모델을 간단히 학습시키면 param_grid 내의 모든 하이퍼 파라미터의 조합에 대해 실험이 완료됩니다.
+
+
+자, grid_model.fit 함수를 통해서 4가지 조합에 대한 실험을 모두 마쳤습니다.
+실험에 대한 결과는 다음과 같이 grid_model.cv_results_ 안에 저장됩니다.
+
+
+우리가 관심 있는 정보는 어떤 파라미터 조합일 때 점수가 어떻게 나오게 되는지에 관한 것이겠죠.
+파라미터 조합은 위 딕셔너리 중 params에, 각각에 대한 테스트 점수는 mean_test_score에 저장되어 있습니다.
+
+(여기서 1순위 조합을 밑에 적용)
+
+
+
+먼저 위에서 만들어놓은 my_GridSearch() 함수로 간단한 그리드 탐색을 해보겠습니다.
+
+가장 좋은 조합은 max_depth=10, n_estimators=100 이군요.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
